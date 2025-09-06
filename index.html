@@ -121,25 +121,7 @@
     <h2 id="appTitle"></h2>
     <p id="appDescription"></p>
     <button id="tryNowBtn" class="btn">Try Now</button>
-
-    <div class="reviews">
-      <h3>Reviews</h3>
-      <div id="reviewsContainer"></div>
-
-      <h4>Add Review</h4>
-      <input type="text" id="username" placeholder="Your name">
-      <textarea id="comment" placeholder="Write your review..."></textarea>
-      <button onclick="submitReview()" class="btn">Submit</button>
-    </div>
   </div>
-
-  <script type="module">
-    import { createClient } from "https://esm.sh/@supabase/supabase-js";
-
-    // 🔑 Supabase credentials
-    const SUPABASE_URL = "https://hnkugpcnkzunmkbgowxt.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNiaW5mcnlwd213ZGtwbmFlaGN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM0MjU4MzksImV4cCI6MjA2OTAwMTgzOX0.1MMexu-zrlu5C182gIWgT72SQArD3euFK4lk97IBwcU";
-    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
     // 📱 Your apps
     const apps = [
@@ -168,7 +150,6 @@
     const appTitle = document.getElementById("appTitle");
     const appDescription = document.getElementById("appDescription");
     const tryNowBtn = document.getElementById("tryNowBtn");
-    const reviewsContainer = document.getElementById("reviewsContainer");
 
     let currentApp = null;
 
@@ -190,57 +171,11 @@
       appTitle.textContent = app.name;
       appDescription.textContent = app.description;
       tryNowBtn.onclick = () => window.open(app.url, "_blank");
-      loadReviews(app.id);
     }
 
     function showAppList() {
       appDetail.style.display = "none";
       appList.style.display = "block";
-    }
-
-    async function loadReviews(appId) {
-      reviewsContainer.innerHTML = "Loading...";
-      const { data, error } = await supabase
-        .from("reviews")
-        .select("*")
-        .eq("app_id", appId)
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        reviewsContainer.innerHTML = "Error loading reviews.";
-        console.error(error);
-        return;
-      }
-
-      reviewsContainer.innerHTML = "";
-      data.forEach(r => {
-        const div = document.createElement("div");
-        div.className = "review";
-        div.innerHTML = `<strong>${r.username}</strong>: ${r.comment}`;
-        reviewsContainer.appendChild(div);
-      });
-
-      if (data.length === 0) reviewsContainer.innerHTML = "<i>No reviews yet. Be the first!</i>";
-    }
-
-    async function submitReview() {
-      const username = document.getElementById("username").value;
-      const comment = document.getElementById("comment").value;
-      if (!username || !comment) return alert("Please enter name and review.");
-
-      const { error } = await supabase.from("reviews").insert([
-        { app_id: currentApp.id, username, comment }
-      ]);
-
-      if (error) {
-        alert("Error submitting review.");
-        console.error(error);
-        return;
-      }
-
-      document.getElementById("username").value = "";
-      document.getElementById("comment").value = "";
-      loadReviews(currentApp.id);
     }
 
     renderAppList();
