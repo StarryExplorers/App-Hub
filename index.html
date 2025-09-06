@@ -73,37 +73,6 @@
     .btn:hover {
       background: linear-gradient(90deg, #ffc8dd, #ffafcc);
     }
-
-    .reviews {
-      margin-top: 1rem;
-    }
-
-    .reviews h3 {
-      color: #6d597a;
-    }
-
-    .review {
-      background: rgba(255, 255, 255, 0.8);
-      padding: 0.6rem;
-      border-radius: 8px;
-      margin: 0.4rem 0;
-      color: #4a4a4a;
-    }
-
-    input, textarea {
-      width: 100%;
-      padding: 0.5rem;
-      margin: 0.3rem 0;
-      border-radius: 6px;
-      border: 1px solid #e0aaff;
-      outline: none;
-      font-family: inherit;
-    }
-
-    textarea {
-      resize: none;
-      height: 80px;
-    }
   </style>
 </head>
 <body>
@@ -123,6 +92,7 @@
     <button id="tryNowBtn" class="btn">Try Now</button>
   </div>
 
+  <script>
     // 📱 Your apps
     const apps = [
       { 
@@ -151,8 +121,6 @@
     const appDescription = document.getElementById("appDescription");
     const tryNowBtn = document.getElementById("tryNowBtn");
 
-    let currentApp = null;
-
     function renderAppList() {
       appList.innerHTML = "";
       apps.forEach(app => {
@@ -165,7 +133,6 @@
     }
 
     function showAppDetail(app) {
-      currentApp = app;
       appList.style.display = "none";
       appDetail.style.display = "block";
       appTitle.textContent = app.name;
